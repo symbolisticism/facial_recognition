@@ -16,7 +16,7 @@ class _ImageInputState extends State<ImageInput> {
       alignment: Alignment.center,
       child: TextButton.icon(
         icon: const Icon(Icons.camera),
-        label: const Text("Take a Picture"),
+        label: const Text("Take Picture"),
         onPressed: () {},
       ),
     );
