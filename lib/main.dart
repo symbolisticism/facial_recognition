@@ -29,17 +29,19 @@ void main() async {
         theme: ThemeData.dark(useMaterial3: true)
             .copyWith(colorScheme: colorScheme),
         debugShowCheckedModeBanner: false,
-        home: const MyApp(),
+        home: MyApp(camera: webcam),
       ),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key, required this.camera});
+
+  CameraDescription camera;
 
   @override
   Widget build(BuildContext context) {
-    return const Home();
+    return Home(camera: camera);
   }
 }
