@@ -36,9 +36,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key, required this.camera});
+  const MyApp({super.key, required this.camera});
 
-  CameraDescription camera;
+  final CameraDescription camera;
 
   @override
   Widget build(BuildContext context) {
