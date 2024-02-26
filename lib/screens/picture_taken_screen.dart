@@ -13,9 +13,7 @@ class PictureTakenScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Analyzing picture..."),
       ),
-      body: Image.file(
-        File(imagePath),
-      ),
+      body: Image.network(imagePath),
     );
   }
 }
