@@ -1,5 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:facial_reg/screens/picture_taken_screen.dart';
+import 'package:logger/logger.dart';
+
+var logger = Logger(printer: PrettyPrinter());
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.camera});
@@ -54,6 +58,25 @@ class _HomeState extends State<Home> {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          try {
+            await _initializeControllerFuture;
+            final image = await _controller.takePicture();
+
+            if (!context.mounted) return;
+
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => PictureTakenScreen(imagePath: image.path),
+              ),
+            );
+          } catch (e) {
+            logger.e(e);
+          }
+        },
+        child: const Icon(Icons.camera),
       ),
     );
   }
