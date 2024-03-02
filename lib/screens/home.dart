@@ -35,6 +35,7 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
+    // dispose of the camera controller
     _controller.dispose();
     super.dispose();
   }
