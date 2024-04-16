@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "32830922008",
+    "project_id": "senior-project-3b821",
+    "storage_bucket": "senior-project-3b821.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:32830922008:android:3539f3bedc2cb50361126d",
+        "android_client_info": {
+          "package_name": "com.example.facial_reg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMSaqcrAE7gjdeB5hXB3wgdoxyjNvZnUQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

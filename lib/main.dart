@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:facial_reg/screens/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// firebase
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 // @@riverpod
 // ThemeData appTheme(Ref ref) {
@@ -16,6 +19,10 @@ ColorScheme colorScheme =
 void main() async {
   // ensure initialization before accessing cameras
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // get a list of available cameras
   final cameras = await availableCameras();
