@@ -60,6 +60,7 @@ class DefaultFirebaseOptions {
     appId: '1:32830922008:android:3539f3bedc2cb50361126d',
     messagingSenderId: '32830922008',
     projectId: 'senior-project-3b821',
+    databaseURL: 'https://senior-project-3b821-default-rtdb.firebaseio.com',
     storageBucket: 'senior-project-3b821.appspot.com',
   );
 
