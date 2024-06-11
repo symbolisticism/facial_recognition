@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:logger/logger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:facial_reg/screens/add_user.dart';
 
 var logger = Logger(printer: PrettyPrinter());
 var db = FirebaseFirestore.instance;
@@ -67,8 +68,8 @@ class _HomeState extends State<Home> {
       // send the image
 
       const person = {
-        'identified': true,
-        'employeeid': '123',
+        'identified': false,
+        'employeeid': '234',
         'firstname': 'Gabriele',
         'lastname': 'Peck'
       };
@@ -156,15 +157,7 @@ class _HomeState extends State<Home> {
             var response = await mlModelResponse(image);
             var jsonResponse = convertToJson(response);
 
-            // check that the user is recognized and that they have a record in
-            //  the database
-
-            // if the person was recognized by the ML model and their record was
-            //  found in the database
-
-            logger.d(isPersonRecognized(jsonResponse)); // true
-            logger.d(await firestoreDocExists(jsonResponse)); // false
-
+            // if the person was recognized and they have a record in the database
             if (isPersonRecognized(jsonResponse) &&
                 await firestoreDocExists(jsonResponse)) {
               if (!context.mounted) return;
@@ -191,12 +184,44 @@ class _HomeState extends State<Home> {
             } else {
               // show that the user could not be found
               if (!context.mounted) return;
-              ScaffoldMessenger.of(context).clearSnackBars();
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text(
-                    'The user could not be identified. Please register as a new user or try again.'),
-                duration: Duration(seconds: 3),
-              ));
+              // ScaffoldMessenger.of(context).clearSnackBars();
+              // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              //   content: Text(
+              //       'The user could not be identified. Please register as a new user or try again.'),
+              //   duration: Duration(seconds: 3),
+              // ));
+              showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        title: const Text('User Not Found'),
+                        content: const SingleChildScrollView(
+                          child: ListBody(
+                            children: <Widget>[
+                              Text('It looks like you are not registered.'),
+                              Text('Would you like to register yourself?')
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('No'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Yes'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const AddUser(),
+                                ),
+                              );
+                            },
+                          )
+                        ],
+                      ));
             }
           } catch (e) {
             logger.e(e);
