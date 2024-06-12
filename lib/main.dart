@@ -1,20 +1,13 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:facial_reg/screens/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-// @@riverpod
-// ThemeData appTheme(Ref ref) {
-//   return ThemeData;
-// }
-
-TextStyle h2 = GoogleFonts.lato().copyWith(fontSize: 18);
 ColorScheme colorScheme =
-    ColorScheme.fromSeed(seedColor: const Color.fromARGB(0, 4, 95, 23));
+    ColorScheme.fromSeed(seedColor: const Color.fromARGB(0, 138, 77, 42), brightness: Brightness.dark);
 
 void main() async {
   // ensure initialization before accessing cameras
@@ -33,8 +26,10 @@ void main() async {
   runApp(
     ProviderScope(
       child: MaterialApp(
-        theme: ThemeData.dark(useMaterial3: true)
-            .copyWith(colorScheme: colorScheme),
+        theme: ThemeData(
+          useMaterial3: true,
+        ).copyWith(
+          colorScheme: colorScheme),
         debugShowCheckedModeBanner: false,
         home: MyApp(camera: webcam),
       ),
