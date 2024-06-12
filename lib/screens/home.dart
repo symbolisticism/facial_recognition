@@ -8,6 +8,8 @@ import 'package:facial_reg/screens/add_user.dart';
 var logger = Logger(printer: PrettyPrinter());
 var db = FirebaseFirestore.instance;
 
+
+// Home Screen
 class Home extends StatefulWidget {
   const Home({super.key, required this.camera});
 
@@ -215,7 +217,7 @@ class _HomeState extends State<Home> {
                               Navigator.of(context).pop();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const AddUser(),
+                                  builder: (context) => AddUser(camera: widget.camera),
                                 ),
                               );
                             },
