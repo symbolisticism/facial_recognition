@@ -47,89 +47,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    /// Returns a dummy API response with dummy data
-    /// This function assumes that the machine learning model is
-    /// sending a response that looks something like the following:
-    ///
-    ///  ```dart
-    /// {
-    /// 'identified':true,
-    /// 'firstname':'John',
-    /// 'lastname':'Doe'
-    /// }
-    /// ```
-    ///
-    /// ...or...
-    ///
-    /// ```dart
-    /// {
-    /// 'identified':false
-    /// }
-    /// ```
-    Future<String> mlModelResponse(XFile image) {
-      // send the image
-
-      const person = {
-        'identified': false,
-        'employeeid': '234',
-        'firstname': 'Gabriele',
-        'lastname': 'Peck'
-      };
-
-      // return Future<String>.value(jsonEncode(person));
-      return Future.delayed(
-          const Duration(seconds: 1), () => jsonEncode(person));
-    }
-
-    /// Checks whether the first value of the JSON response is true or false
-    /// This makes the assumption that data returned from the machine
-    ///   learning model looks like the following:
-    ///
-    /// ```dart
-    /// {
-    /// 'identified':true,
-    /// 'firstname':'John',
-    /// 'lastname':'Doe'
-    /// }
-    /// ```
-    bool isPersonRecognized(dynamic jsonResponse) {
-      if (jsonResponse['identified'] == true) {
-        return true;
-      }
-
-      return false;
-    }
-
-    /// Returns a dummy response from a Firestore database
-    Future<bool> firestoreDocExists(dynamic jsonResponse) {
-      logger.d(jsonResponse['employeeid']);
-      final usersRef = db.collection('users').doc(jsonResponse['employeeid']);
-      logger.d('Hello Before');
-      return usersRef.get().then((value) => value.exists ? true : false);
-    }
-
-    /// Returns a dummy response relating the success of the post operation
-    /// to the database
-    Future<bool> addUser() {
-      return Future.delayed(const Duration(seconds: 1), () => true);
-    }
-
-    /// Returns the success of clocking the user in or out
-    Future<bool> clockUser() {
-      return Future.delayed(const Duration(seconds: 1), () => true);
-    }
-
-    /// Returns a JSON string converted to JSON, throws an error
-    ///   if the returned object cannot be encoded as JSON
-    dynamic convertToJson(String response) {
-      try {
-        return jsonDecode(response);
-      } catch (e) {
-        logger.e(e);
-        return {'identified': false, 'error': 'JSON conversion'};
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Facial Recognition Punch In/Out"),
@@ -232,5 +149,88 @@ class _HomeState extends State<Home> {
         child: const Icon(Icons.camera),
       ),
     );
+  }
+
+  /// Returns a dummy API response with dummy data
+  /// This function assumes that the machine learning model is
+  /// sending a response that looks something like the following:
+  ///
+  ///  ```dart
+  /// {
+  /// 'identified':true,
+  /// 'firstname':'John',
+  /// 'lastname':'Doe'
+  /// }
+  /// ```
+  ///
+  /// ...or...
+  ///
+  /// ```dart
+  /// {
+  /// 'identified':false
+  /// }
+  /// ```
+  Future<String> mlModelResponse(XFile image) {
+    // send the image
+
+    const person = {
+      'identified': false,
+      'employeeid': '234',
+      'firstname': 'Gabriele',
+      'lastname': 'Peck'
+    };
+
+    // return Future<String>.value(jsonEncode(person));
+    return Future.delayed(
+        const Duration(seconds: 1), () => jsonEncode(person));
+  }
+
+  /// Checks whether the first value of the JSON response is true or false
+  /// This makes the assumption that data returned from the machine
+  ///   learning model looks like the following:
+  ///
+  /// ```dart
+  /// {
+  /// 'identified':true,
+  /// 'firstname':'John',
+  /// 'lastname':'Doe'
+  /// }
+  /// ```
+  bool isPersonRecognized(dynamic jsonResponse) {
+    if (jsonResponse['identified'] == true) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /// Returns a dummy response from a Firestore database
+  Future<bool> firestoreDocExists(dynamic jsonResponse) {
+    logger.d(jsonResponse['employeeid']);
+    final usersRef = db.collection('users').doc(jsonResponse['employeeid']);
+    logger.d('Hello Before');
+    return usersRef.get().then((value) => value.exists ? true : false);
+  }
+
+  /// Returns a dummy response relating the success of the post operation
+  /// to the database
+  Future<bool> addUser() {
+    return Future.delayed(const Duration(seconds: 1), () => true);
+  }
+
+  /// Returns the success of clocking the user in or out
+  Future<bool> clockUser() {
+    return Future.delayed(const Duration(seconds: 1), () => true);
+  }
+
+  /// Returns a JSON string converted to JSON, throws an error
+  ///   if the returned object cannot be encoded as JSON
+  dynamic convertToJson(String response) {
+    try {
+      return jsonDecode(response);
+    } catch (e) {
+      logger.e(e);
+      return {'identified': false, 'error': 'JSON conversion'};
+    }
   }
 }
