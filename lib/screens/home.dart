@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:logger/logger.dart';
@@ -7,7 +8,6 @@ import 'package:facial_reg/screens/add_user.dart';
 
 var logger = Logger(printer: PrettyPrinter());
 var db = FirebaseFirestore.instance;
-
 
 // Home Screen
 class Home extends StatefulWidget {
@@ -50,6 +50,14 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Facial Recognition Punch In/Out"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
         centerTitle: true,
       ),
       body: FutureBuilder<void>(
@@ -134,7 +142,8 @@ class _HomeState extends State<Home> {
                               Navigator.of(context).pop();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => AddUser(camera: widget.camera),
+                                  builder: (context) =>
+                                      AddUser(camera: widget.camera),
                                 ),
                               );
                             },
@@ -181,8 +190,7 @@ class _HomeState extends State<Home> {
     };
 
     // return Future<String>.value(jsonEncode(person));
-    return Future.delayed(
-        const Duration(seconds: 1), () => jsonEncode(person));
+    return Future.delayed(const Duration(seconds: 1), () => jsonEncode(person));
   }
 
   /// Checks whether the first value of the JSON response is true or false
