@@ -41,7 +41,7 @@ dependencies:
   path_provider: ^2.1.2
   path: ^1.9.0
   logger: ^2.0.2+1
-  firebase_core: ^2.29.0
+  firebase_core: ^2.32.0
   cloud_firestore: ^4.17.5
   string_validator: ^1.1.0
   firebase_storage: ^11.7.7
@@ -57,6 +57,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  change_app_package_name: ^1.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

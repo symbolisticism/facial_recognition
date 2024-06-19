@@ -69,6 +69,7 @@ class DefaultFirebaseOptions {
     appId: '1:32830922008:ios:4caed3f830ddb22461126d',
     messagingSenderId: '32830922008',
     projectId: 'senior-project-3b821',
+    databaseURL: 'https://senior-project-3b821-default-rtdb.firebaseio.com',
     storageBucket: 'senior-project-3b821.appspot.com',
     iosBundleId: 'com.example.facialReg',
   );

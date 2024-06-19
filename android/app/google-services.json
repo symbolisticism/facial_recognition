@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:32830922008:android:3539f3bedc2cb50361126d",
+        "mobilesdk_app_id": "1:32830922008:android:553c9d9946692cbe61126d",
         "android_client_info": {
-          "package_name": "com.example.facial_reg"
+          "package_name": "com.senior_project.facial_recognition"
         }
       },
       "oauth_client": [],
