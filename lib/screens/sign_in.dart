@@ -14,7 +14,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  bool loggingIn = true;
+  bool isLoggingIn = true;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _SignInState extends State<SignIn> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(loggingIn ? 'Sign In' : 'Sign Up'),
+              Text(isLoggingIn ? 'Sign In' : 'Sign Up'),
               const SizedBox(height: 48),
               Container(
                 child: Column(
@@ -71,17 +71,37 @@ class _SignInState extends State<SignIn> {
                 onPressed: () async {
                   FocusManager.instance.primaryFocus?.unfocus();
                   if (formKey.currentState!.validate()) {
-                    if (loggingIn) {
+                    if (isLoggingIn) {
                       try {
                         final credential = await FirebaseAuth.instance
                             .signInWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passwordController.text);
-
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
+                          if (!context.mounted) {
+                            logger.e('CONTEXT NOT MOUTNED');
+                            return;
+                          }
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('No user found for that email.'),
+                            ),
+                          );
                           logger.e('No user found for that email.');
                         } else if (e.code == 'wrong-password') {
+                          if (!context.mounted) {
+                            logger.e('CONTEXT NOT MOUTNED');
+                            return;
+                          }
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Wrong password provided for that user.'),
+                            ),
+                          );
                           logger.e('Wrong password provided for that user.');
                         }
                       }
@@ -93,12 +113,52 @@ class _SignInState extends State<SignIn> {
                           email: emailController.text,
                           password: passwordController.text,
                         );
+
+                        if (!context.mounted) {
+                          logger.e('CONTEXT NOT MOUNTED');
+                          return;
+                        }
+
+                        emailController.clear();
+                        passwordController.clear();
+
+                        setState(() {
+                          isLoggingIn = true;
+                        });
+
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'User successfully created. Redirecting to login page...'),
+                          ),
+                        );
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
+                          if (!context.mounted) {
+                            logger.e('CONTEXT NOT MOUTNED');
+                            return;
+                          }
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                                  Text('The password provided is too weak.'),
+                            ),
+                          );
                           logger.e('The password provided is too weak.');
                         } else if (e.code == 'email-already-in-use') {
-                          logger
-                              .e('The account already exists.');
+                          if (!context.mounted) {
+                            logger.e('CONTEXT NOT MOUTNED');
+                            return;
+                          }
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('This account already exists.'),
+                            ),
+                          );
+                          logger.e('This account already exists.');
                         }
                       } catch (e) {
                         logger.e(e);
@@ -106,17 +166,22 @@ class _SignInState extends State<SignIn> {
                     }
                   }
                 },
-                child: Text(loggingIn ? 'Sign In' : 'Create Account'),
+                child: Text(isLoggingIn ? 'Sign In' : 'Create Account'),
               ),
               TextButton(
                 onPressed: () {
                   setState(() {
-                    loggingIn = !loggingIn;
+                    isLoggingIn = !isLoggingIn;
                   });
                 },
-                child: Text(loggingIn
-                    ? 'Don\'t have an account? Sign Up'
-                    : 'Already have an account? Sign In'),
+                child: Text(
+                  isLoggingIn
+                      ? 'Don\'t have an account? Sign Up'
+                      : 'Already have an account? Sign In',
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
               ),
             ],
           ),
