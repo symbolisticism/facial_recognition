@@ -126,11 +126,12 @@ class _SignInState extends State<SignIn> {
                           isLoggingIn = true;
                         });
 
+                        // TODO: figure out why this isn't redirecting to the login page
                         ScaffoldMessenger.of(context).clearSnackBars();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                                'User successfully created. Redirecting to login page...'),
+                                'User successfully created.'),
                           ),
                         );
                       } on FirebaseAuthException catch (e) {
