@@ -94,6 +94,40 @@ class _HomeState extends State<Home> {
                 duration: Duration(seconds: 3),
               ));
 
+              // TODO: Add clock in to database
+              // example of datetime output
+              // 2024-06-30 22:37:07.392037
+              final currentTime = DateTime.now();
+
+              // break out datetime for granular control over formatting
+              final year = currentTime.year;
+              final month = currentTime.month;
+              final day = currentTime.day;
+              final hour = currentTime.hour;
+              final minute = currentTime.minute;
+              final second = currentTime.second;
+
+              final macroTime = '$month:$day:$year';
+              final microTime = '$hour:$minute:$second';
+              final employeeid = jsonResponse['employeeid'];
+
+              final primaryKey = '$employeeid-$macroTime-$microTime';
+
+              // construct database entry
+              final clock = {
+                'employeeid': jsonResponse['employeeid'],
+                'firstname': jsonResponse['firstname'],
+                'lastname': jsonResponse['lastname']
+              };
+
+              try {
+                logger.d('Hello Before');
+                db.collection('clocks').doc(primaryKey).set(clock);
+                logger.d('Hello After');
+              } catch (e) {
+                logger.e(e);
+              }
+
               // if the person was either recognized by the ML model or a record
               //  was found in the database, but not both
             } else if (isPersonRecognized(jsonResponse) ||
@@ -183,7 +217,7 @@ class _HomeState extends State<Home> {
     // send the image
 
     const person = {
-      'identified': false,
+      'identified': true,
       'employeeid': '234',
       'firstname': 'Gabriele',
       'lastname': 'Peck'
@@ -214,9 +248,7 @@ class _HomeState extends State<Home> {
 
   /// Returns a dummy response from a Firestore database
   Future<bool> firestoreDocExists(dynamic jsonResponse) {
-    logger.d(jsonResponse['employeeid']);
     final usersRef = db.collection('users').doc(jsonResponse['employeeid']);
-    logger.d('Hello Before');
     return usersRef.get().then((value) => value.exists ? true : false);
   }
 
