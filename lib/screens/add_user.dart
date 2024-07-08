@@ -47,7 +47,7 @@ class _AddUserState extends State<AddUser> {
     }
 
     // add the user's name and ID to Firestore
-    final fullname = {'firstname': firstname, 'lastname': lastname};
+    final employeeInformation = {'firstname': firstname, 'lastname': lastname};
 
     // add the user's picture to Firebase Storage
     final images = storage.child('images');
@@ -56,7 +56,7 @@ class _AddUserState extends State<AddUser> {
     final file = File(localFilePath);
 
     try {
-      db.collection('users').doc(employeeid).set(fullname);
+      db.collection('users').doc(employeeid).set(employeeInformation);
       await userImageRef.putFile(file);
     } catch (e) {
       logger.e(e);
