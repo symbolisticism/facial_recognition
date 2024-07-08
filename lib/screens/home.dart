@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:facial_reg/screens/recent_clocks.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -60,6 +61,23 @@ class _HomeState extends State<Home> {
         ],
         centerTitle: true,
       ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const RecentClocks(),
+                  ),
+                );
+              },
+              child: const Text('Recent Clock History'),
+            ),
+          ],
+        ),
+      ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
@@ -94,7 +112,6 @@ class _HomeState extends State<Home> {
                 duration: Duration(seconds: 3),
               ));
 
-              // TODO: Add clock in to database
               // example of datetime output
               // 2024-06-30 22:37:07.392037
               final currentTime = DateTime.now();
@@ -117,13 +134,18 @@ class _HomeState extends State<Home> {
               final clock = {
                 'employeeid': jsonResponse['employeeid'],
                 'firstname': jsonResponse['firstname'],
-                'lastname': jsonResponse['lastname']
+                'lastname': jsonResponse['lastname'],
+                'month': month,
+                'day': day,
+                'year': year,
+                'hour': hour,
+                'minute': minute,
+                'second': second,
+                'timestamp': currentTime.toString()
               };
 
               try {
-                logger.d('Hello Before');
                 db.collection('clocks').doc(primaryKey).set(clock);
-                logger.d('Hello After');
               } catch (e) {
                 logger.e(e);
               }
