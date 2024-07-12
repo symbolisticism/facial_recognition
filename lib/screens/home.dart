@@ -112,8 +112,8 @@ class _HomeState extends State<Home> {
                 duration: Duration(seconds: 3),
               ));
 
-              // example of datetime output
-              // 2024-06-30 22:37:07.392037
+              // example of timestamp output
+              // Timestamp(seconds=1720775608, nanoseconds=746051000)
               Timestamp timestamp = Timestamp.now();
               final currentTime = timestamp.toDate();
 
@@ -132,6 +132,7 @@ class _HomeState extends State<Home> {
               final primaryKey = '$employeeid-$macroTime-$microTime';
 
               bool? clockedIn;
+              Duration? timeWorked;
 
               final clocksRef = db.collection('clocks');
               await clocksRef
@@ -144,11 +145,12 @@ class _HomeState extends State<Home> {
                   clockedIn = true;
                 } else {
                   clockedIn = false;
+                  final startTime = querySnapshot.docs[0].get('timestamp');
+                  timeWorked = currentTime.difference(startTime.toDate());
                 }
               });
 
               if (!context.mounted) return;
-
               if (clockedIn == null) {
                 ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -174,6 +176,10 @@ class _HomeState extends State<Home> {
                 'clockedstatus': clockedIn,
                 'timestamp': timestamp
               };
+
+              if (clockedIn == false) {
+                clock['timeworked-minutes'] = timeWorked?.inMinutes;
+              }
 
               try {
                 db.collection('clocks').doc(primaryKey).set(clock);
