@@ -114,7 +114,8 @@ class _HomeState extends State<Home> {
 
               // example of datetime output
               // 2024-06-30 22:37:07.392037
-              final currentTime = DateTime.now();
+              Timestamp timestamp = Timestamp.now();
+              final currentTime = timestamp.toDate();
 
               // break out datetime for granular control over formatting
               final year = currentTime.year;
@@ -130,6 +131,35 @@ class _HomeState extends State<Home> {
 
               final primaryKey = '$employeeid-$macroTime-$microTime';
 
+              bool? clockedIn;
+
+              final clocksRef = db.collection('clocks');
+              await clocksRef
+                  .where('employeeid', isEqualTo: employeeid)
+                  .orderBy('timestamp', descending: true)
+                  .limit(1)
+                  .get()
+                  .then((querySnapshot) {
+                if (querySnapshot.docs[0].get('clockedstatus') == false) {
+                  clockedIn = true;
+                } else {
+                  clockedIn = false;
+                }
+              });
+
+              if (!context.mounted) return;
+
+              if (clockedIn == null) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'There was an error determining clocked status. Please try again.'),
+                  ),
+                );
+                return;
+              }
+
               // construct database entry
               final clock = {
                 'employeeid': jsonResponse['employeeid'],
@@ -141,7 +171,8 @@ class _HomeState extends State<Home> {
                 'hour': hour,
                 'minute': minute,
                 'second': second,
-                'timestamp': currentTime.toString()
+                'clockedstatus': clockedIn,
+                'timestamp': timestamp
               };
 
               try {
