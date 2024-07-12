@@ -15,14 +15,12 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  bool isLoggingIn = true;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -33,7 +31,7 @@ class _SignInState extends State<SignIn> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(isLoggingIn ? 'Sign In' : 'Sign Up'),
+              const Text('Sign In'),
               const SizedBox(height: 48),
               Container(
                 child: Column(
@@ -74,129 +72,62 @@ class _SignInState extends State<SignIn> {
                   if (formKey.currentState!.validate()) {
                     emailController.clear();
                     passwordController.clear();
-                    if (isLoggingIn) {
-                      try {
-                        final credential = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: emailController.text,
-                                password: passwordController.text);
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                          if (!context.mounted) {
-                            logger.e('CONTEXT NOT MOUTNED');
-                            return;
-                          }
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('No user found for that email.'),
-                            ),
-                          );
-                          logger.e('No user found for that email.');
-                        } else if (e.code == 'wrong-password') {
-                          if (!context.mounted) {
-                            logger.e('CONTEXT NOT MOUTNED');
-                            return;
-                          }
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  'Wrong password provided for that user.'),
-                            ),
-                          );
-                          logger.e('Wrong password provided for that user.');
-                        }
-                      }
-
-                      if (!context.mounted) return;
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const SummaryScreen(),
-                        ),
-                      );
-                    } else {
-                      try {
-                        // attempt to add their credentials to Firebase
-                        final credential = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text,
-                        );
-
+                    try {
+                      final credential = await FirebaseAuth.instance
+                          .signInWithEmailAndPassword(
+                              email: emailController.text,
+                              password: passwordController.text);
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == 'user-not-found') {
                         if (!context.mounted) {
                           logger.e('CONTEXT NOT MOUNTED');
                           return;
                         }
-
-                        emailController.clear();
-                        passwordController.clear();
-
-                        setState(() {
-                          isLoggingIn = true;
-                        });
-
                         ScaffoldMessenger.of(context).clearSnackBars();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('User successfully created.'),
+                            content: Text('No user found for that email.'),
                           ),
                         );
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'weak-password') {
-                          if (!context.mounted) {
-                            logger.e('CONTEXT NOT MOUTNED');
-                            return;
-                          }
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content:
-                                  Text('The password provided is too weak.'),
-                            ),
-                          );
-                          logger.e('The password provided is too weak.');
-                        } else if (e.code == 'email-already-in-use') {
-                          if (!context.mounted) {
-                            logger.e('CONTEXT NOT MOUTNED');
-                            return;
-                          }
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('This account already exists.'),
-                            ),
-                          );
-                          logger.e('This account already exists.');
+                        logger.e('No user found for that email.');
+                      } else if (e.code == 'wrong-password') {
+                        if (!context.mounted) {
+                          logger.e('CONTEXT NOT MOUNTED');
+                          return;
                         }
-                      } catch (e) {
-                        logger.e(e);
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content:
+                                Text('Wrong password provided for that user.'),
+                          ),
+                        );
+                        logger.e('Wrong password provided for that user.');
                       }
                     }
+
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const SummaryScreen(),
+                      ),
+                    );
                   }
                 },
-                child: Text(isLoggingIn ? 'Sign In' : 'Create Account'),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    isLoggingIn = !isLoggingIn;
-                  });
-                },
-                child: Text(
-                  isLoggingIn
-                      ? 'Don\'t have an account? Sign Up'
-                      : 'Already have an account? Sign In',
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
+                child: const Text('Sign In'),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }
