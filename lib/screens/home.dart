@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:facial_reg/screens/recent_clocks.dart';
+import 'package:facial_reg/screens/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -54,29 +55,16 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
             onPressed: () {
-              FirebaseAuth.instance.signOut();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SignIn(),
+                ),
+              );
             },
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.login),
           ),
         ],
         centerTitle: true,
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const RecentClocks(),
-                  ),
-                );
-              },
-              child: const Text('Recent Clock History'),
-            ),
-          ],
-        ),
       ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
