@@ -46,3 +46,6 @@ app.*.map.json
 .firebase/
 lib/firebase_options.dart
 functions/
+
+# machine learning model
+/ml_model
