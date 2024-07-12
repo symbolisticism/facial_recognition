@@ -29,8 +29,6 @@ class _RecentClocksState extends State<RecentClocks> {
                 logger.e(snapshot.error);
                 return Center(child: Text('${snapshot.error} has occurred.'));
               } else if (snapshot.hasData) {
-                logger.d(snapshot.data);
-
                 return content;
               }
             }
