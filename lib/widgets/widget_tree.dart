@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:facial_reg/screens/home.dart';
-import 'package:facial_reg/screens/sign_in.dart';
+import 'package:facial_reg/screens/summary_screen.dart';
 
 final auth = FirebaseAuth.instance;
 
@@ -25,9 +25,9 @@ class _WidgetTreeState extends State<WidgetTree> {
         stream: auth.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Home(camera: widget.camera);
+            return const SummaryScreen();
           } else {
-            return const SignIn();
+            return Home(camera: widget.camera);
           }
         });
   }
