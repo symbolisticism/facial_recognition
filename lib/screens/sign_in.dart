@@ -1,3 +1,4 @@
+import 'package:facial_reg/screens/summary_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
@@ -71,6 +72,8 @@ class _SignInState extends State<SignIn> {
                 onPressed: () async {
                   FocusManager.instance.primaryFocus?.unfocus();
                   if (formKey.currentState!.validate()) {
+                    emailController.clear();
+                    passwordController.clear();
                     if (isLoggingIn) {
                       try {
                         final credential = await FirebaseAuth.instance
@@ -105,6 +108,14 @@ class _SignInState extends State<SignIn> {
                           logger.e('Wrong password provided for that user.');
                         }
                       }
+
+                      if (!context.mounted) return;
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SummaryScreen(),
+                        ),
+                      );
                     } else {
                       try {
                         // attempt to add their credentials to Firebase
@@ -126,12 +137,10 @@ class _SignInState extends State<SignIn> {
                           isLoggingIn = true;
                         });
 
-                        // TODO: figure out why this isn't redirecting to the login page
                         ScaffoldMessenger.of(context).clearSnackBars();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text(
-                                'User successfully created.'),
+                            content: Text('User successfully created.'),
                           ),
                         );
                       } on FirebaseAuthException catch (e) {
