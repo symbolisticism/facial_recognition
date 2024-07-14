@@ -42,7 +42,7 @@ class _RecentClocksState extends State<RecentClocks> {
         .collection('clocks')
         .orderBy('firstname', descending: true)
         .limit(10);
-    final results = await query.get().then((querySnapshot) {
+    await query.get().then((querySnapshot) {
       logger.d('Query successfully completed');
       var listTiles = <Widget>[];
       for (var docSnapshot in querySnapshot.docs) {
