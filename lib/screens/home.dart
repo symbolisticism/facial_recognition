@@ -1,12 +1,11 @@
 import 'package:camera/camera.dart';
-import 'package:facial_reg/screens/recent_clocks.dart';
 import 'package:facial_reg/screens/sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:logger/logger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:facial_reg/screens/add_user.dart';
+import 'package:http/http.dart' as http;
 
 var logger = Logger(printer: PrettyPrinter());
 var db = FirebaseFirestore.instance;
@@ -260,8 +259,22 @@ class _HomeState extends State<Home> {
   /// 'identified':false
   /// }
   /// ```
-  Future<String> mlModelResponse(XFile image) {
+  Future<String> mlModelResponse(XFile image) async {
     // send the image
+
+    final imageBytes = await image.readAsBytes();
+
+    final url = Uri.http('10.0.2.2:5000', 'api/predict/$image');
+    final request = http.MultipartRequest("POST", url);
+    request.files.add(http.MultipartFile.fromBytes(
+      'image',
+      imageBytes,
+    ));
+
+    final streamedResponse = await request.send();
+    final response = await streamedResponse.stream.bytesToString();
+
+    logger.d('Response status: $response');
 
     const person = {
       'identified': true,
