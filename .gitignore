@@ -48,4 +48,4 @@ lib/firebase_options.dart
 functions/
 
 # machine learning model
-/ml_model
+/lib/ml_model
