@@ -73,7 +73,7 @@ class _SignInState extends State<SignIn> {
                     emailController.clear();
                     passwordController.clear();
                     try {
-                      final credential = await FirebaseAuth.instance
+                      await FirebaseAuth.instance
                           .signInWithEmailAndPassword(
                               email: emailController.text,
                               password: passwordController.text);
