@@ -1,16 +1,5 @@
-# facial_reg
+# Face Clock
 
-A new Flutter project.
+This Flutter application takes a picture of a user and sends it over an API to a machine learning model. The machine learning model determines if the person in the picture is a current employee, and, if it is, automatically clocks the employee in or out of work.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The application also contains an administrator login, which allows the admin to access reports showing the most recent clock events and the hours logged by each employee in the last day.
